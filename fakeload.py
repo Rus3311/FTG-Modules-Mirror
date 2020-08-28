@@ -10,6 +10,7 @@ async def typewriter(typew):
     await typew.edit("`ПОЖАЛУЙСТА ПРОЧТИ ДО КОНЦА🖤`")
     sleep(1)
     await typew.edit("...")
+
     await typew.edit(str(number) + "   Я")
     sleep(1)
     await typew.edit(str(number) + "   хочу")

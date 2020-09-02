@@ -1,37 +1,37 @@
-# This Source Code Form is subject to the terms of the Mozilla Public
-# License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at http://mozilla.org/MPL/2
-import asyncio
-from telethon import events
-from telethon.tl.types import ChannelParticipantsAdmins
-from uniborg.util import admin_cmd
+# спс за дай модуль
+import logging
+import requests
+from .. import loader, utils
 
+logger = logging.getLogger(__name__)
 
-@borg.on(admin_cmd("tagall"))
-async def _(event):
-    if event.fwd_from:
-        return
-    mentions = "Bhai log"
-    chat = await event.get_input_chat()
-    async for x in borg.iter_participants(chat, 100):
-        mentions += f" \n [{x.first_name}](tg://user?id={x.id})"
-    await event.reply(mentions)
-    await event.delete()
+def register(cb):
+    cb(TagAllMod())
 
+def chunks(lst, n):
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
 
-@borg.on(admin_cmd("admin"))
-async def _(event):
-    if event.fwd_from:
-        return
-    mentions = "bhai log : "
-    chat = await event.get_input_chat()
-    async for x in borg.iter_participants(chat, filter=ChannelParticipantsAdmins):
-        mentions += f" \n [{x.first_name}](tg://user?id={x.id})"
-    reply_message = None
-    if event.reply_to_msg_id:
-        reply_message = await event.get_reply_message()
-        await reply_message.reply(mentions)
-    else:
-        await event.reply(mentions)
-    await event.delete()
+class TagAllMod(loader.Module):
 
+    strings = {"name":"TagAll"}
+
+    def __init__(self):
+        self.config = loader.ModuleConfig("DEFAULT_MENTION_MESSAGE", "SENATOR призывает всех\n                🌚🌪️", "Default message of mentions")
+        self.name = self.strings["name"]
+
+    async def client_ready(self, client, db):
+        self.client = client
+
+    async def tagallcmd(self, message):
+        arg = utils.get_args_raw(message)
+
+        logger.error(message)
+        notifies = []
+        async for user in self.client.iter_participants(message.to_id):
+            notifies.append("<a href=\"tg://user?id="+ str(user.id) +"\">\u206c\u206f</a>")
+        chunkss = list(chunks(notifies, 10))
+        logger.error(chunkss)
+        await message.delete()
+        for chunk in chunkss:
+            await self.client.send_message(message.to_id, (self.config["DEFAULT_MENTION_MESSAGE"] if not arg else arg) + '\u206c\u206f'.join(chunk))

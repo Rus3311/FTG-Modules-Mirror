@@ -187,4 +187,4 @@ async def typewriter(typew):
         await typew.edit(("`Ещё немного: `") +str(number) + "%   ")
 	number = number + 1 + 1
 	sleep(1)
-	await typew.edit("`Мусор очищен``\nИтог: 56% by:@senator_ice`")
+	await typew.edit("`Мусор очищен``\nИтог: 56% by:senator_ice`")

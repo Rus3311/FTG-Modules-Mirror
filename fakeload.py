@@ -6,7 +6,7 @@ from time import sleep
 from userbot import CMD_HELP, ZALG_LIST
 from userbot.events import register
 
-@register(outgoing=True, pattern='^.mus(?: |$)(.*)')
+@register(outgoing=True, pattern='^.musor(?: |$)(.*)')
 async def typewriter(typew):
 	message = typew.pattern_match.group(1)
 	await typew.edit("`Начинается процесс очистки мусора!!!...`")
@@ -187,4 +187,6 @@ async def typewriter(typew):
         await typew.edit(("`Ещё немного: `") +str(number) + "%   ")
 	number = number + 1 + 1
 	sleep(1)
-	await typew.edit("`Мусор очищен``\nИтог: 56% by:senator_ice`")
+	await typew.edit("`Мусор очищен``\nИтог: 56%`")
+        sleep(1)
+	await typew.edit("`\n@senator_ice`")
